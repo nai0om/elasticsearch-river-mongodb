@@ -343,13 +343,7 @@ class OplogSlurper implements Runnable {
             return false;
         }
         String namespace = (String) entry.get(MongoDBRiver.OPLOG_NAMESPACE);
-        // Initial support for sharded collection -
-        // https://jira.mongodb.org/browse/SERVER-4333
-        // Not interested in operation from migration or sharding
-        if (entry.containsField(MongoDBRiver.OPLOG_FROM_MIGRATE) && ((BasicBSONObject) entry).getBoolean(MongoDBRiver.OPLOG_FROM_MIGRATE)) {
-            logger.trace("[Invalid Oplog Entry] - from migration or sharding operation. Can be ignored. {}", JSONSerializers.getStrict().serialize(entry));
-            return false;
-        }
+
         // Not interested by chunks - skip all
         if (namespace.endsWith(MongoDBRiver.GRIDFS_CHUNKS_SUFFIX)) {
             return false;
