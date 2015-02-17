@@ -221,7 +221,7 @@ public class MongoDBRiverBulkProcessor {
             Iterator<Info> iterator = node.getThreadPool().iterator();
             while (iterator.hasNext()) {
                 Info info = iterator.next();
-                if ("bulk".equals(info.getName())) {
+                if (info != null && "bulk".equals(info.getName()) && info.getQueueSize() != null) {
                     return info.getQueueSize().getSingles();
                 }
             }
@@ -236,7 +236,7 @@ public class MongoDBRiverBulkProcessor {
                 Stats stats = iterator.next();
                 if ("bulk".equals(stats.getName())) {
                     int queue = stats.getQueue();
-                    logger.trace("bulkQueueSize [{}] - queue [{}] - availability [{}]", bulkQueueSize, queue, 1 - (queue / bulkQueueSize));
+                     logger.trace("bulkQueueSize [{}] - queue [{}] - availability [{}]", bulkQueueSize, queue, 1 - (queue / bulkQueueSize));
                     return 1 - (queue / bulkQueueSize) > 0.1;
                 }
             }
